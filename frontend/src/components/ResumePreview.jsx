@@ -1,74 +1,66 @@
 import React from 'react';
 
 const ResumePreview = ({ resumeData }) => {
-    const { personalInfo, summary, skills, experience, education, projects, certifications, languages } = resumeData;
+    const { personalInfo, careerObjective, skills, experience, education, internships, projects, leadershipAchievements, additionalInfo } = resumeData;
 
     return (
-        <div id="resume-content" className="resume-preview p-5 bg-white border shadow-sm" style={{ minHeight: '1000px', color: '#333', fontFamily: 'Arial, sans-serif' }}>
-            {/* Personal Info */}
+        <div id="resume-content" className="resume-preview bg-white" style={{
+            minHeight: '1123px',
+            width: '100%',
+            maxWidth: '210mm', // A4 Width
+            margin: '0 auto',
+            color: '#1a1a1a',
+            fontFamily: '"Open Sans", sans-serif',
+            fontSize: '11pt',
+            lineHeight: '1.5',
+            padding: '1in', // Standard professional resume margin
+            boxSizing: 'border-box'
+        }}>
+            {/* Header */}
             <header className="text-center mb-4">
-                <h1 className="fw-bold text-uppercase mb-1">{personalInfo.fullName || 'Your Name'}</h1>
-                <p className="mb-0">
-                    {personalInfo.email && <span>{personalInfo.email} | </span>}
-                    {personalInfo.phone && <span>{personalInfo.phone} | </span>}
-                    {personalInfo.location && <span>{personalInfo.location}</span>}
-                </p>
-                <p className="mb-0 small text-primary">
-                    {personalInfo.linkedIn && <span className="me-2">{personalInfo.linkedIn}</span>}
-                    {personalInfo.website && <span>{personalInfo.website}</span>}
-                </p>
+                <h1 className="fw-bold mb-2" style={{ fontSize: '24pt', letterSpacing: '1px' }}>{personalInfo.fullName || 'FULL NAME'}</h1>
+                <div className="mb-1" style={{ fontSize: '10pt' }}>
+                    {[personalInfo.location, personalInfo.phone, personalInfo.email].filter(Boolean).join(' | ')}
+                </div>
+                <div style={{ fontSize: '10pt' }}>
+                    {personalInfo.linkedIn && <span>LinkedIn: {personalInfo.linkedIn}</span>}
+                    {personalInfo.linkedIn && personalInfo.github && <span> | </span>}
+                    {personalInfo.github && <span>GitHub: {personalInfo.github}</span>}
+                </div>
             </header>
 
-            {/* Summary */}
-            {summary && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Summary</h5>
-                    <p className="small mb-0">{summary}</p>
+            {/* Career Objective */}
+            {careerObjective && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Career Objective</h5>
+                    <p className="mb-0">{careerObjective}</p>
                 </section>
             )}
 
-            {/* Skills */}
-            {skills && skills.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Skills</h5>
-                    <p className="small mb-0">{skills.join(', ')}</p>
-                </section>
-            )}
-
-            {/* Experience */}
-            {experience && experience.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Experience</h5>
-                    {experience.map((exp, index) => (
-                        <div key={index} className="mb-3">
-                            <div className="d-flex justify-content-between align-items-baseline">
-                                <p className="mb-0 fw-bold">{exp.jobTitle}</p>
-                                <p className="mb-0 small text-muted">{exp.startDate} – {exp.endDate}</p>
-                            </div>
-                            <div className="d-flex justify-content-between align-items-baseline">
-                                <p className="mb-1 small italic">{exp.company}</p>
-                                <p className="mb-1 small italic">{exp.location}</p>
-                            </div>
-                            <p className="small mb-0 ms-3" style={{ whiteSpace: 'pre-line' }}>• {exp.description}</p>
-                        </div>
-                    ))}
+            {/* Technical Skills */}
+            {(skills.programmingLanguages || skills.webDatabase || skills.softwareTesting || skills.toolsIDEs || skills.otherSkills) && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Technical Skills</h5>
+                    {skills.programmingLanguages && <p className="mb-1 small"><strong>Programming Languages:</strong> {skills.programmingLanguages}</p>}
+                    {skills.webDatabase && <p className="mb-1 small"><strong>Web & Database:</strong> {skills.webDatabase}</p>}
+                    {skills.softwareTesting && <p className="mb-1 small"><strong>Software Testing:</strong> {skills.softwareTesting}</p>}
+                    {skills.toolsIDEs && <p className="mb-1 small"><strong>Tools & IDEs:</strong> {skills.toolsIDEs}</p>}
+                    {skills.otherSkills && <p className="mb-1 small"><strong>Other Skills:</strong> {skills.otherSkills}</p>}
                 </section>
             )}
 
             {/* Education */}
             {education && education.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Education</h5>
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Education</h5>
                     {education.map((edu, index) => (
-                        <div key={index} className="mb-2">
-                            <div className="d-flex justify-content-between align-items-baseline">
-                                <p className="mb-0 fw-bold">{edu.school}</p>
-                                <p className="mb-0 small text-muted">{edu.graduationDate}</p>
+                        <div key={index} className="mb-3">
+                            <div className="d-flex justify-content-between">
+                                <span className="fw-bold">{edu.degree} – {edu.school}, {edu.cityState}</span>
+                                <span className="fw-bold">{edu.graduationYear}</span>
                             </div>
-                            <div className="d-flex justify-content-between align-items-baseline">
-                                <p className="mb-0 small">{edu.degree} in {edu.fieldOfStudy}</p>
-                                {edu.gpa && <p className="mb-0 small text-muted">GPA: {edu.gpa}</p>}
-                            </div>
+                            {edu.coreSubjects && <p className="mb-0 small"><strong>Core Subjects:</strong> {edu.coreSubjects}</p>}
+                            {edu.academicExposure && <p className="mb-0 small"><strong>Academic Exposure:</strong> {edu.academicExposure}</p>}
                         </div>
                     ))}
                 </section>
@@ -76,46 +68,53 @@ const ResumePreview = ({ resumeData }) => {
 
             {/* Projects */}
             {projects && projects.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Projects</h5>
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Projects</h5>
                     {projects.map((proj, index) => (
                         <div key={index} className="mb-3">
-                            <div className="d-flex justify-content-between align-items-baseline">
-                                <p className="mb-0 fw-bold">{proj.title}</p>
-                                <p className="mb-0 small text-muted">{proj.date}</p>
-                            </div>
-                            {proj.link && <p className="mb-1 small font-monospace text-primary">{proj.link}</p>}
-                            <p className="small mb-1">• {proj.description}</p>
-                            {proj.technologies && proj.technologies.length > 0 && (
-                                <p className="small mb-0"><strong>Technologies:</strong> {proj.technologies.join(', ')}</p>
-                            )}
+                            <p className="fw-bold mb-1">{proj.title} {proj.technologies && <span>– <strong>Technologies:</strong> {proj.technologies}</span>}</p>
+                            <p className="mb-1 small" style={{ whiteSpace: 'pre-line' }}>• <strong>Description:</strong> {proj.description}</p>
+                            {proj.learnings && <p className="mb-0 small" style={{ whiteSpace: 'pre-line' }}>• <strong>Learnings:</strong> {proj.learnings}</p>}
                         </div>
                     ))}
                 </section>
             )}
 
-            {/* Certifications */}
-            {certifications && certifications.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Certifications</h5>
-                    {certifications.map((cert, index) => (
-                        <div key={index} className="d-flex justify-content-between align-items-baseline mb-1">
-                            <p className="small mb-0"><span className="fw-bold">{cert.name}</span> | {cert.issuer}</p>
-                            <p className="small text-muted mb-0">{cert.date}</p>
+            {/* Internship / Training */}
+            {internships && internships.length > 0 && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Internship / Training</h5>
+                    {internships.map((intern, index) => (
+                        <div key={index} className="mb-3">
+                            <p className="fw-bold mb-1">{intern.role} – {intern.company} | {intern.year}</p>
+                            <p className="mb-1 small" style={{ whiteSpace: 'pre-line' }}>• <strong>Tasks:</strong> {intern.tasks}</p>
+                            {intern.skillsLearned && <p className="mb-1 small">• <strong>Skills Learned:</strong> {intern.skillsLearned}</p>}
+                            {intern.achievements && <p className="mb-0 small">• <strong>Achievements:</strong> {intern.achievements}</p>}
                         </div>
                     ))}
                 </section>
             )}
 
-            {/* Languages */}
-            {languages && languages.length > 0 && (
-                <section className="mb-4">
-                    <h5 className="border-bottom pb-1 fw-bold text-uppercase">Languages</h5>
-                    <p className="small mb-0">
-                        {languages.map((lang, index) => (
-                            <span key={index}>{lang.name} ({lang.proficiency}){index < languages.length - 1 ? ', ' : ''}</span>
-                        ))}
-                    </p>
+            {/* Leadership & Achievements */}
+            {leadershipAchievements && leadershipAchievements.length > 0 && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Leadership & Achievements</h5>
+                    {leadershipAchievements.map((lead, index) => (
+                        <div key={index} className="mb-3">
+                            <p className="fw-bold mb-1">{lead.role} – {lead.organization} | {lead.year}</p>
+                            <p className="mb-0 small" style={{ whiteSpace: 'pre-line' }}>• <strong>Description:</strong> {lead.description}</p>
+                        </div>
+                    ))}
+                </section>
+            )}
+
+            {/* Additional Information */}
+            {(additionalInfo.languages || additionalInfo.availability || additionalInfo.certificationsInterests) && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Additional Information</h5>
+                    {additionalInfo.languages && <p className="mb-1 small"><strong>Languages:</strong> {additionalInfo.languages}</p>}
+                    {additionalInfo.availability && <p className="mb-1 small"><strong>Availability:</strong> {additionalInfo.availability}</p>}
+                    {additionalInfo.certificationsInterests && <p className="mb-0 small"><strong>Certifications / Tools / Interests:</strong> {additionalInfo.certificationsInterests}</p>}
                 </section>
             )}
 

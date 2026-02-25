@@ -4,14 +4,27 @@ const ResumeContext = createContext();
 
 export const ResumeProvider = ({ children }) => {
     const [resumeData, setResumeData] = useState({
-        personalInfo: { fullName: '', email: '', phone: '', location: '', linkedIn: '', website: '' },
-        summary: '',
-        skills: [],
+        personalInfo: { fullName: '', email: '', phone: '', location: '', linkedIn: '', github: '', website: '' },
+        careerObjective: '',
+        skills: {
+            programmingLanguages: '',
+            webDatabase: '',
+            softwareTesting: '',
+            toolsIDEs: '',
+            otherSkills: ''
+        },
         experience: [],
         education: [],
+        internships: [],
         projects: [],
-        certifications: [],
-        languages: []
+        leadershipAchievements: [],
+        additionalInfo: {
+            languages: '',
+            availability: '',
+            certificationsInterests: ''
+        },
+        certifications: [], // keeping for compatibility or future use
+        languages: [] // keeping for compatibility or future use
     });
 
     return (

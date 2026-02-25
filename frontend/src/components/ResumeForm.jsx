@@ -6,7 +6,7 @@ import html2pdf from 'html2pdf.js';
 
 const ResumeForm = () => {
     const { resumeData, setResumeData } = useResume();
-    const [skillInput, setSkillInput] = useState('');
+
 
     const handlePersonalInfoChange = (e) => {
         const { name, value } = e.target;
@@ -16,39 +16,22 @@ const ResumeForm = () => {
         });
     };
 
-    const addSkill = () => {
-        if (skillInput.trim()) {
-            setResumeData({ ...resumeData, skills: [...resumeData.skills, skillInput.trim()] });
-            setSkillInput('');
-        }
-    };
-
-    const removeSkill = (index) => {
-        setResumeData({ ...resumeData, skills: resumeData.skills.filter((_, i) => i !== index) });
-    };
-
-    const addExperience = () => {
+    const handleSkillChange = (e) => {
+        const { name, value } = e.target;
         setResumeData({
             ...resumeData,
-            experience: [...resumeData.experience, { jobTitle: '', company: '', location: '', startDate: '', endDate: '', description: '' }]
+            skills: { ...resumeData.skills, [name]: value }
         });
     };
 
-    const handleExperienceChange = (index, e) => {
-        const { name, value } = e.target;
-        const updatedExp = [...resumeData.experience];
-        updatedExp[index][name] = value;
-        setResumeData({ ...resumeData, experience: updatedExp });
-    };
 
-    const removeExperience = (index) => {
-        setResumeData({ ...resumeData, experience: resumeData.experience.filter((_, i) => i !== index) });
-    };
+
+
 
     const addEducation = () => {
         setResumeData({
             ...resumeData,
-            education: [...resumeData.education, { degree: '', fieldOfStudy: '', school: '', location: '', graduationDate: '', gpa: '' }]
+            education: [...resumeData.education, { degree: '', school: '', cityState: '', graduationYear: '', coreSubjects: '', academicExposure: '' }]
         });
     };
 
@@ -66,7 +49,7 @@ const ResumeForm = () => {
     const addProject = () => {
         setResumeData({
             ...resumeData,
-            projects: [...resumeData.projects, { title: '', technologies: [], date: '', description: '', link: '' }]
+            projects: [...resumeData.projects, { title: '', technologies: '', description: '', learnings: '' }]
         });
     };
 
@@ -75,6 +58,42 @@ const ResumeForm = () => {
         const updatedProj = [...resumeData.projects];
         updatedProj[index][name] = value;
         setResumeData({ ...resumeData, projects: updatedProj });
+    };
+
+    const addInternship = () => {
+        setResumeData({
+            ...resumeData,
+            internships: [...resumeData.internships, { role: '', company: '', year: '', tasks: '', skillsLearned: '', achievements: '' }]
+        });
+    };
+
+    const handleInternshipChange = (index, e) => {
+        const { name, value } = e.target;
+        const updatedInt = [...resumeData.internships];
+        updatedInt[index][name] = value;
+        setResumeData({ ...resumeData, internships: updatedInt });
+    };
+
+    const removeInternship = (index) => {
+        setResumeData({ ...resumeData, internships: resumeData.internships.filter((_, i) => i !== index) });
+    };
+
+    const addLeadership = () => {
+        setResumeData({
+            ...resumeData,
+            leadershipAchievements: [...resumeData.leadershipAchievements, { role: '', organization: '', year: '', description: '' }]
+        });
+    };
+
+    const handleLeadershipChange = (index, e) => {
+        const { name, value } = e.target;
+        const updatedLead = [...resumeData.leadershipAchievements];
+        updatedLead[index][name] = value;
+        setResumeData({ ...resumeData, leadershipAchievements: updatedLead });
+    };
+
+    const removeLeadership = (index) => {
+        setResumeData({ ...resumeData, leadershipAchievements: resumeData.leadershipAchievements.filter((_, i) => i !== index) });
     };
 
     const removeProject = (index) => {
@@ -99,22 +118,12 @@ const ResumeForm = () => {
         setResumeData({ ...resumeData, certifications: resumeData.certifications.filter((_, i) => i !== index) });
     };
 
-    const addLanguage = () => {
+    const handleAdditionalInfoChange = (e) => {
+        const { name, value } = e.target;
         setResumeData({
             ...resumeData,
-            languages: [...resumeData.languages, { name: '', proficiency: '' }]
+            additionalInfo: { ...resumeData.additionalInfo, [name]: value }
         });
-    };
-
-    const handleLanguageChange = (index, e) => {
-        const { name, value } = e.target;
-        const updatedLang = [...resumeData.languages];
-        updatedLang[index][name] = value;
-        setResumeData({ ...resumeData, languages: updatedLang });
-    };
-
-    const removeLanguage = (index) => {
-        setResumeData({ ...resumeData, languages: resumeData.languages.filter((_, i) => i !== index) });
     };
 
     const handleSubmit = async (e) => {
@@ -156,70 +165,69 @@ const ResumeForm = () => {
                             </h5>
                             <div className="row g-3">
                                 <div className="col-md-6">
-                                    <label className="small text-muted mb-1">Full Name</label>
-                                    <input type="text" name="fullName" placeholder="John Doe" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <label className="form-label fw-bold text-info mb-1">Full Name</label>
+                                    <input type="text" name="fullName" placeholder="e.g., John Doe" className="form-control" onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
-                                    <label className="small text-muted mb-1">Email Address</label>
-                                    <input type="email" name="email" placeholder="john@example.com" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <label className="form-label fw-bold text-info mb-1">Email Address</label>
+                                    <input type="email" name="email" placeholder="e.g., john@example.com" className="form-control" onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
-                                    <label className="small text-muted mb-1">Phone Number</label>
-                                    <input type="text" name="phone" placeholder="+1 234 567 890" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <label className="form-label fw-bold text-info mb-1">Phone Number</label>
+                                    <input type="text" name="phone" placeholder="e.g., +91 98765 43210" className="form-control" onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
-                                    <label className="small text-muted mb-1">Location</label>
-                                    <input type="text" name="location" placeholder="City, State" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <label className="form-label fw-bold text-info mb-1">Location (City, State)</label>
+                                    <input type="text" name="location" placeholder="e.g., Mumbai, Maharashtra" className="form-control" onChange={handlePersonalInfoChange} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label fw-bold text-info mb-1">LinkedIn URL</label>
+                                    <input type="text" name="linkedIn" placeholder="https://linkedin.com/in/yourprofile" className="form-control" onChange={handlePersonalInfoChange} />
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label fw-bold text-info mb-1">GitHub URL</label>
+                                    <input type="text" name="github" placeholder="https://github.com/yourusername" className="form-control" onChange={handlePersonalInfoChange} />
                                 </div>
                             </div>
                         </section>
 
                         <section className="mb-5">
                             <h5 className="text-secondary fw-bold mb-3 d-flex align-items-center">
-                                <span className="me-2">📝</span> Professional Summary
+                                <span className="me-2">🎯</span> Career Objective
                             </h5>
-                            <textarea className="form-control" rows="4" placeholder="Brief professional summary that highlights your core expertise..." onChange={(e) => setResumeData({ ...resumeData, summary: e.target.value })}></textarea>
+                            <label className="form-label fw-bold text-info mb-1">Career Objective / Summary</label>
+                            <textarea className="form-control" rows="3" placeholder="Write 2–3 lines about your career goals..." value={resumeData.careerObjective} onChange={(e) => setResumeData({ ...resumeData, careerObjective: e.target.value })}></textarea>
                         </section>
 
                         <section className="mb-5">
                             <h5 className="text-secondary fw-bold mb-3 d-flex align-items-center">
-                                <span className="me-2">⚡</span> Key Skills
+                                <span className="me-2">⚡</span> Technical Skills
                             </h5>
-                            <div className="input-group mb-3 shadow-sm rounded-pill overflow-hidden">
-                                <input type="text" className="form-control border-0 px-4" value={skillInput} onChange={(e) => setSkillInput(e.target.value)} placeholder="Add a skill (e.g. React.js)" />
-                                <button className="btn btn-primary px-4" type="button" onClick={addSkill}>Add</button>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Programming Languages</label>
+                                <input type="text" name="programmingLanguages" placeholder="e.g., C, Python, Java" className="form-control" value={resumeData.skills.programmingLanguages} onChange={handleSkillChange} />
                             </div>
-                            <div className="d-flex flex-wrap gap-2">
-                                {resumeData.skills.map((skill, index) => (
-                                    <span key={index} className="badge rounded-pill bg-primary border-primary d-flex align-items-center gap-2 py-2 px-3">
-                                        {skill} <button type="button" className="btn-close btn-close-white" style={{ fontSize: '0.6rem' }} onClick={() => removeSkill(index)}></button>
-                                    </span>
-                                ))}
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Web & Database</label>
+                                <input type="text" name="webDatabase" placeholder="e.g., HTML, CSS, MySQL, PHP" className="form-control" value={resumeData.skills.webDatabase} onChange={handleSkillChange} />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Software Testing</label>
+                                <input type="text" name="softwareTesting" placeholder="e.g., Manual Testing, Automation Tools" className="form-control" value={resumeData.skills.softwareTesting} onChange={handleSkillChange} />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Tools & IDEs</label>
+                                <input type="text" name="toolsIDEs" placeholder="e.g., VS Code, PyCharm" className="form-control" value={resumeData.skills.toolsIDEs} onChange={handleSkillChange} />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Other Skills</label>
+                                <input type="text" name="otherSkills" placeholder="e.g., Problem Solving, Debugging" className="form-control" value={resumeData.skills.otherSkills} onChange={handleSkillChange} />
                             </div>
                         </section>
 
-                        <section className="mb-5">
-                            <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
-                                <span>💼 Work Experience</span>
-                                <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-3" onClick={addExperience}>+ Add Experience</button>
-                            </h5>
-                            {resumeData.experience.map((exp, index) => (
-                                <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                                    <div className="d-flex justify-content-between align-items-start mb-3">
-                                        <div className="w-100 me-3">
-                                            <input type="text" name="jobTitle" placeholder="Job Title" className="form-control mb-2" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} />
-                                            <input type="text" name="company" placeholder="Company Name" className="form-control" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} />
-                                        </div>
-                                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => removeExperience(index)}>✕</button>
-                                    </div>
-                                    <div className="row g-2 mb-3">
-                                        <div className="col-6"><input type="text" name="startDate" placeholder="Start Date" className="form-control" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                                        <div className="col-6"><input type="text" name="endDate" placeholder="End Date" className="form-control" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} /></div>
-                                    </div>
-                                    <textarea name="description" placeholder="Describe your achievements and responsibilities..." className="form-control" rows="3" value={exp.description} onChange={(e) => handleExperienceChange(index, e)}></textarea>
-                                </div>
-                            ))}
-                        </section>
+
+
+
 
                         <section className="mb-5">
                             <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
@@ -230,20 +238,97 @@ const ResumeForm = () => {
                                 <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
                                     <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" onClick={() => removeEducation(index)}>✕</button>
                                     <div className="row g-3">
-                                        <div className="col-md-6">
-                                            <input type="text" name="degree" placeholder="Degree (e.g. B.S.)" className="form-control" value={edu.degree} onChange={(e) => handleEducationChange(index, e)} />
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Degree Name</label>
+                                            <input type="text" name="degree" placeholder="Degree Name (e.g. B.Tech in CSE)" className="form-control" value={edu.degree} onChange={(e) => handleEducationChange(index, e)} />
                                         </div>
-                                        <div className="col-md-6">
-                                            <input type="text" name="fieldOfStudy" placeholder="Field of Study" className="form-control" value={edu.fieldOfStudy} onChange={(e) => handleEducationChange(index, e)} />
+                                        <div className="col-md-8">
+                                            <label className="form-label fw-bold text-info mb-1">College/University</label>
+                                            <input type="text" name="school" placeholder="College/University Name" className="form-control" value={edu.school} onChange={(e) => handleEducationChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label fw-bold text-info mb-1">City, State</label>
+                                            <input type="text" name="cityState" placeholder="City, State" className="form-control" value={edu.cityState} onChange={(e) => handleEducationChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label fw-bold text-info mb-1">Graduation Year</label>
+                                            <input type="text" name="graduationYear" placeholder="Graduation Year" className="form-control" value={edu.graduationYear} onChange={(e) => handleEducationChange(index, e)} />
                                         </div>
                                         <div className="col-12">
-                                            <input type="text" name="school" placeholder="School/University" className="form-control" value={edu.school} onChange={(e) => handleEducationChange(index, e)} />
+                                            <label className="form-label fw-bold text-info mb-1">Core Subjects</label>
+                                            <textarea name="coreSubjects" placeholder="Core Subjects: List major subjects" className="form-control mb-2" rows="2" value={edu.coreSubjects} onChange={(e) => handleEducationChange(index, e)}></textarea>
                                         </div>
-                                        <div className="col-md-6">
-                                            <input type="text" name="graduationDate" placeholder="Graduation Date" className="form-control" value={edu.graduationDate} onChange={(e) => handleEducationChange(index, e)} />
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Academic Exposure</label>
+                                            <textarea name="academicExposure" placeholder="Academic Exposure: List programming languages, tools, etc." className="form-control" rows="2" value={edu.academicExposure} onChange={(e) => handleEducationChange(index, e)}></textarea>
                                         </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </section>
+
+                        <section className="mb-5">
+                            <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
+                                <span>💼 Internship / Training</span>
+                                <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-3" onClick={addInternship}>+ Add Internship</button>
+                            </h5>
+                            {resumeData.internships.map((intern, index) => (
+                                <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                    <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" onClick={() => removeInternship(index)}>✕</button>
+                                    <div className="row g-3">
                                         <div className="col-md-6">
-                                            <input type="text" name="gpa" placeholder="GPA" className="form-control" value={edu.gpa} onChange={(e) => handleEducationChange(index, e)} />
+                                            <label className="form-label fw-bold text-info mb-1">Role / Position</label>
+                                            <input type="text" name="role" placeholder="Role / Position" className="form-control" value={intern.role} onChange={(e) => handleInternshipChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label fw-bold text-info mb-1">Company / Institute</label>
+                                            <input type="text" name="company" placeholder="Company / Institute Name" className="form-control" value={intern.company} onChange={(e) => handleInternshipChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-2">
+                                            <label className="form-label fw-bold text-info mb-1">Year</label>
+                                            <input type="text" name="year" placeholder="Year" className="form-control" value={intern.year} onChange={(e) => handleInternshipChange(index, e)} />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Tasks</label>
+                                            <textarea name="tasks" placeholder="Tasks and responsibilities" className="form-control mb-2" rows="2" value={intern.tasks} onChange={(e) => handleInternshipChange(index, e)}></textarea>
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Skills Learned</label>
+                                            <input type="text" name="skillsLearned" placeholder="Skills or tools learned" className="form-control mb-2" value={intern.skillsLearned} onChange={(e) => handleInternshipChange(index, e)} />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Achievements</label>
+                                            <input type="text" name="achievements" placeholder="Key achievements" className="form-control" value={intern.achievements} onChange={(e) => handleInternshipChange(index, e)} />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </section>
+
+                        <section className="mb-5">
+                            <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
+                                <span>🏆 Leadership & Achievements</span>
+                                <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-3" onClick={addLeadership}>+ Add Achievement</button>
+                            </h5>
+                            {resumeData.leadershipAchievements.map((lead, index) => (
+                                <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                    <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" onClick={() => removeLeadership(index)}>✕</button>
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold text-info mb-1">Role / Position</label>
+                                            <input type="text" name="role" placeholder="Role / Position" className="form-control" value={lead.role} onChange={(e) => handleLeadershipChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label className="form-label fw-bold text-info mb-1">Organization / Event</label>
+                                            <input type="text" name="organization" placeholder="Organization / Event" className="form-control" value={lead.organization} onChange={(e) => handleLeadershipChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-2">
+                                            <label className="form-label fw-bold text-info mb-1">Year</label>
+                                            <input type="text" name="year" placeholder="Year" className="form-control" value={lead.year} onChange={(e) => handleLeadershipChange(index, e)} />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Description</label>
+                                            <textarea name="description" placeholder="Describe the role or the achievement..." className="form-control" rows="2" value={lead.description} onChange={(e) => handleLeadershipChange(index, e)}></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -258,50 +343,35 @@ const ResumeForm = () => {
                             {resumeData.projects.map((proj, index) => (
                                 <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
                                     <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" onClick={() => removeProject(index)}>✕</button>
-                                    <input type="text" name="title" placeholder="Project Title" className="form-control mb-3" value={proj.title} onChange={(e) => handleProjectChange(index, e)} />
-                                    <div className="row g-2 mb-3">
-                                        <div className="col-md-6"><input type="text" name="date" placeholder="Date/Duration" className="form-control" value={proj.date} onChange={(e) => handleProjectChange(index, e)} /></div>
-                                        <div className="col-md-6"><input type="text" name="link" placeholder="Project Link" className="form-control" value={proj.link} onChange={(e) => handleProjectChange(index, e)} /></div>
-                                    </div>
-                                    <textarea name="description" placeholder="Short project description..." className="form-control mb-3" rows="2" value={proj.description} onChange={(e) => handleProjectChange(index, e)}></textarea>
-                                    <input type="text" placeholder="Technologies used (e.g. React, Node.js)" className="form-control" value={proj.technologies.join(', ')} onChange={(e) => {
-                                        const updatedProj = [...resumeData.projects];
-                                        updatedProj[index].technologies = e.target.value.split(',').map(t => t.trim());
-                                        setResumeData({ ...resumeData, projects: updatedProj });
-                                    }} />
+                                    <label className="form-label fw-bold text-info mb-1">Project Name</label>
+                                    <input type="text" name="title" placeholder="Project Name" className="form-control mb-3" value={proj.title} onChange={(e) => handleProjectChange(index, e)} />
+                                    <label className="form-label fw-bold text-info mb-1">Technologies Used</label>
+                                    <input type="text" name="technologies" placeholder="Technologies Used (e.g. React, Node.js)" className="form-control mb-3" value={proj.technologies} onChange={(e) => handleProjectChange(index, e)} />
+                                    <label className="form-label fw-bold text-info mb-1">Description</label>
+                                    <textarea name="description" placeholder="Brief description of the project, your contributions, and key learnings" className="form-control mb-2" rows="3" value={proj.description} onChange={(e) => handleProjectChange(index, e)}></textarea>
+                                    <label className="form-label fw-bold text-info mb-1">Learnings</label>
+                                    <textarea name="learnings" placeholder="Additional points about tools, concepts, or outcomes" className="form-control" rows="2" value={proj.learnings} onChange={(e) => handleProjectChange(index, e)}></textarea>
                                 </div>
                             ))}
                         </section>
 
-                        <div className="row g-4 mb-5">
-                            <div className="col-md-6">
-                                <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
-                                    <span>🏆 Certifications</span>
-                                    <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-2" onClick={addCertification}>+</button>
-                                </h5>
-                                {resumeData.certifications.map((cert, index) => (
-                                    <div key={index} className="glass-card mb-3 p-3 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                                        <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" style={{ padding: '0 0.4rem' }} onClick={() => removeCertification(index)}>✕</button>
-                                        <input type="text" name="name" placeholder="Cert Name" className="form-control form-control-sm mb-2" value={cert.name} onChange={(e) => handleCertificationChange(index, e)} />
-                                        <input type="text" name="issuer" placeholder="Issuer" className="form-control form-control-sm mb-2" value={cert.issuer} onChange={(e) => handleCertificationChange(index, e)} />
-                                        <input type="text" name="date" placeholder="Date" className="form-control form-control-sm" value={cert.date} onChange={(e) => handleCertificationChange(index, e)} />
-                                    </div>
-                                ))}
+                        <section className="mb-5">
+                            <h5 className="text-secondary fw-bold mb-3 d-flex align-items-center">
+                                <span className="me-2">ℹ️</span> Additional Information
+                            </h5>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Languages</label>
+                                <input type="text" name="languages" placeholder="List languages you know" className="form-control" value={resumeData.additionalInfo.languages} onChange={handleAdditionalInfoChange} />
                             </div>
-                            <div className="col-md-6">
-                                <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
-                                    <span>🌐 Languages</span>
-                                    <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-2" onClick={addLanguage}>+</button>
-                                </h5>
-                                {resumeData.languages.map((lang, index) => (
-                                    <div key={index} className="glass-card mb-3 p-3 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                                        <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" style={{ padding: '0 0.4rem' }} onClick={() => removeLanguage(index)}>✕</button>
-                                        <input type="text" name="name" placeholder="Language" className="form-control form-control-sm mb-2" value={lang.name} onChange={(e) => handleLanguageChange(index, e)} />
-                                        <input type="text" name="proficiency" placeholder="Proficiency" className="form-control form-control-sm" value={lang.proficiency} onChange={(e) => handleLanguageChange(index, e)} />
-                                    </div>
-                                ))}
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Availability</label>
+                                <input type="text" name="availability" placeholder="Immediate / Notice Period" className="form-control" value={resumeData.additionalInfo.availability} onChange={handleAdditionalInfoChange} />
                             </div>
-                        </div>
+                            <div className="mb-3">
+                                <label className="form-label fw-bold text-info mb-1">Certifications / Tools / Interests (Optional)</label>
+                                <textarea name="certificationsInterests" placeholder="Optional" className="form-control" rows="3" value={resumeData.additionalInfo.certificationsInterests} onChange={handleAdditionalInfoChange}></textarea>
+                            </div>
+                        </section>
                         <div className="mt-5 border-top pt-4">
                             <button type="submit" className="btn btn-primary w-100 py-3 fs-5 shadow-lg">🚀 Save & Finalize Resume</button>
                         </div>
@@ -311,7 +381,7 @@ const ResumeForm = () => {
             <div className="col-md-5 sticky-top p-0" style={{ top: '100px', height: 'fit-content' }}>
                 <div className="p-3">
                     <h5 className="text-center text-muted mb-3 small fw-bold text-uppercase tracking-widest">ATS Preview</h5>
-                    <div className="shadow-lg rounded overflow-hidden">
+                    <div className="bg-white shadow-lg rounded overflow-auto" style={{ maxHeight: '80vh' }}>
                         <ResumePreview resumeData={resumeData} />
                     </div>
                 </div>
