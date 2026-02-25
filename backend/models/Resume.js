@@ -7,10 +7,17 @@ const ResumeSchema = new mongoose.Schema({
         phone: String,
         location: String,
         linkedIn: String,
+        github: String,
         website: String
     },
-    summary: String,
-    skills: [String],
+    careerObjective: String,
+    skills: {
+        programmingLanguages: String,
+        webDatabase: String,
+        softwareTesting: String,
+        toolsIDEs: String,
+        otherSkills: String
+    },
     experience: [{
         jobTitle: String,
         company: String,
@@ -21,19 +28,37 @@ const ResumeSchema = new mongoose.Schema({
     }],
     education: [{
         degree: String,
-        fieldOfStudy: String,
         school: String,
-        location: String,
-        graduationDate: String,
-        gpa: String
+        cityState: String,
+        graduationYear: String,
+        coreSubjects: String,
+        academicExposure: String
+    }],
+    internships: [{
+        role: String,
+        company: String,
+        year: String,
+        tasks: String,
+        skillsLearned: String,
+        achievements: String
     }],
     projects: [{
         title: String,
-        technologies: [String],
-        date: String,
+        technologies: String,
         description: String,
-        link: String
+        learnings: String
     }],
+    leadershipAchievements: [{
+        role: String,
+        organization: String,
+        year: String,
+        description: String
+    }],
+    additionalInfo: {
+        languages: String,
+        availability: String,
+        certificationsInterests: String
+    },
     certifications: [{
         name: String,
         issuer: String,
