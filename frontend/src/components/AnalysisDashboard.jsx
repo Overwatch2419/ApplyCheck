@@ -14,7 +14,7 @@ const AnalysisDashboard = () => {
         try {
             const res = await axios.post('http://localhost:5000/api/analysis/analyze', {
                 jobDescription,
-                resumeSkills: resumeData.skills
+                resumeData
             });
             setAnalysisResult(res.data);
         } catch (err) {
@@ -27,7 +27,7 @@ const AnalysisDashboard = () => {
 
     return (
         <div className="container pb-5">
-            <h1 className="display-4 fw-bold mb-5 text-center" style={{ background: 'linear-gradient(to right, #fff, var(--text-muted))', WebkitBackgroundClip: 'text', WebkitTextFillColor: transparent }}>ATS Match Analysis</h1>
+            <h1 className="display-4 fw-bold mb-5 text-center" style={{ background: 'linear-gradient(to right, #fff, var(--text-muted))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>ATS Match Analysis</h1>
 
             <div className="row g-4">
                 <div className="col-lg-7">
@@ -92,14 +92,56 @@ const AnalysisDashboard = () => {
                                 <h6 className="text-danger fw-bold mb-3 d-flex align-items-center">
                                     <span className="me-2">❌</span> Missing High-Impact Keywords
                                 </h6>
-                                <div className="d-flex flex-wrap gap-2">
-                                    {analysisResult.missingKeywords.length > 0 ? (
-                                        analysisResult.missingKeywords.map((kw, i) => (
-                                            <span key={i} className="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2">{kw}</span>
-                                        ))
-                                    ) : (
-                                        <p className="small text-muted">Great work! You've covered all key terms.</p>
-                                    )}
+                                {analysisResult.categorizedMissing ? (
+                                    <div className="d-flex flex-column gap-3">
+                                        {Object.entries(analysisResult.categorizedMissing).map(([category, kws]) => (
+                                            kws.length > 0 && (
+                                                <div key={category}>
+                                                    <p className="text-muted small fw-bold mb-1 text-uppercase tracking-tighter" style={{ fontSize: '0.7rem' }}>
+                                                        {category.replace(/([A-Z])/g, ' $1').trim()}
+                                                    </p>
+                                                    <div className="d-flex flex-wrap gap-2">
+                                                        {kws.map((kw, i) => (
+                                                            <span key={i} className="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1" style={{ fontSize: '0.75rem' }}>{kw}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="d-flex flex-wrap gap-2">
+                                        {analysisResult.missingKeywords.length > 0 ? (
+                                            analysisResult.missingKeywords.map((kw, i) => (
+                                                <span key={i} className="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2">{kw}</span>
+                                            ))
+                                        ) : (
+                                            <p className="small text-muted">Great work! You've covered all key terms.</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4 p-3 rounded-4" style={{ background: 'rgba(56, 189, 248, 0.05)', border: '1px dashed rgba(56, 189, 248, 0.2)' }}>
+                                <h6 className="text-info fw-bold mb-2 d-flex align-items-center" style={{ color: '#38bdf8' }}>
+                                    <span className="me-2">✍️</span> Optimized Snippet
+                                </h6>
+                                <p className="small text-muted italic mb-3">Include this in your Professional Summary or Experience section:</p>
+                                <div className="p-3 bg-dark bg-opacity-50 rounded-3 position-relative">
+                                    <p className="small mb-0 pe-5" style={{ color: '#e0f2fe', lineHeight: '1.5' }}>
+                                        "{analysisResult.optimizedSnippet}"
+                                    </p>
+                                    <button
+                                        className="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(analysisResult.optimizedSnippet);
+                                            alert('Snippet copied to clipboard!');
+                                        }}
+                                        title="Copy to clipboard"
+                                        style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}
+                                    >
+                                        📋
+                                    </button>
                                 </div>
                             </div>
 
@@ -107,10 +149,24 @@ const AnalysisDashboard = () => {
                                 <h6 className="text-info fw-bold mb-3 d-flex align-items-center">
                                     <span className="me-2">💡</span> Strategic Suggestions
                                 </h6>
+
+                                {analysisResult.jdSpecificSuggestions?.length > 0 && (
+                                    <div className="mb-3 p-3 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-25">
+                                        <p className="small fw-bold text-info mb-2 text-uppercase tracking-wider">🎯 JD-Specific Advice</p>
+                                        <ul className="list-unstyled mb-0">
+                                            {analysisResult.jdSpecificSuggestions.map((s, i) => (
+                                                <li key={i} className="small mb-2 text-info d-flex align-items-start fw-bold">
+                                                    <span className="me-2 opacity-75">✦</span> {s}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
                                 <ul className="list-unstyled">
                                     {analysisResult.suggestions.map((s, i) => (
-                                        <li key={i} className="small mb-2 text-muted d-flex align-items-start text-info">
-                                            <span className="me-2 text-info opacity-50">•</span> {s}
+                                        <li key={i} className="small mb-2 text-muted d-flex align-items-start">
+                                            <span className="me-2 opacity-50">•</span> {s}
                                         </li>
                                     ))}
                                 </ul>

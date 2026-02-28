@@ -1,4 +1,5 @@
 import React from 'react';
+import { exportPdf } from '../utils/pdfExport';
 
 const ResumePreview = ({ resumeData }) => {
     const { personalInfo, careerObjective, skills, experience, education, internships, projects, leadershipAchievements, additionalInfo } = resumeData;
@@ -34,6 +35,22 @@ const ResumePreview = ({ resumeData }) => {
                 <section className="mb-3">
                     <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Career Objective</h5>
                     <p className="mb-0">{careerObjective}</p>
+                </section>
+            )}
+
+            {/* Work Experience */}
+            {experience && experience.length > 0 && (
+                <section className="mb-3">
+                    <h5 className="fw-bold border-bottom pb-1 mb-2" style={{ fontSize: '12pt', color: '#2c3e50' }}>Work Experience</h5>
+                    {experience.map((exp, index) => (
+                        <div key={index} className="mb-3">
+                            <div className="d-flex justify-content-between">
+                                <span className="fw-bold">{exp.jobTitle} – {exp.company}, {exp.location}</span>
+                                <span className="fw-bold">{exp.startDate} – {exp.endDate}</span>
+                            </div>
+                            <p className="mb-0 small" style={{ whiteSpace: 'pre-line' }}>{exp.description}</p>
+                        </div>
+                    ))}
                 </section>
             )}
 

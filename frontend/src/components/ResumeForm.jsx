@@ -28,6 +28,30 @@ const ResumeForm = () => {
 
 
 
+    const addExperience = () => {
+        setResumeData({
+            ...resumeData,
+            experience: [...resumeData.experience, { jobTitle: '', company: '', location: '', startDate: '', endDate: '', description: '' }]
+        });
+    };
+
+    const handleExperienceChange = (index, e) => {
+        const { name, value } = e.target;
+        setResumeData({
+            ...resumeData,
+            experience: resumeData.experience.map((exp, i) =>
+                i === index ? { ...exp, [name]: value } : exp
+            )
+        });
+    };
+
+    const removeExperience = (index) => {
+        setResumeData({
+            ...resumeData,
+            experience: resumeData.experience.filter((_, i) => i !== index)
+        });
+    };
+
     const addEducation = () => {
         setResumeData({
             ...resumeData,
@@ -37,9 +61,12 @@ const ResumeForm = () => {
 
     const handleEducationChange = (index, e) => {
         const { name, value } = e.target;
-        const updatedEdu = [...resumeData.education];
-        updatedEdu[index][name] = value;
-        setResumeData({ ...resumeData, education: updatedEdu });
+        setResumeData({
+            ...resumeData,
+            education: resumeData.education.map((edu, i) =>
+                i === index ? { ...edu, [name]: value } : edu
+            )
+        });
     };
 
     const removeEducation = (index) => {
@@ -55,9 +82,12 @@ const ResumeForm = () => {
 
     const handleProjectChange = (index, e) => {
         const { name, value } = e.target;
-        const updatedProj = [...resumeData.projects];
-        updatedProj[index][name] = value;
-        setResumeData({ ...resumeData, projects: updatedProj });
+        setResumeData({
+            ...resumeData,
+            projects: resumeData.projects.map((proj, i) =>
+                i === index ? { ...proj, [name]: value } : proj
+            )
+        });
     };
 
     const addInternship = () => {
@@ -69,9 +99,12 @@ const ResumeForm = () => {
 
     const handleInternshipChange = (index, e) => {
         const { name, value } = e.target;
-        const updatedInt = [...resumeData.internships];
-        updatedInt[index][name] = value;
-        setResumeData({ ...resumeData, internships: updatedInt });
+        setResumeData({
+            ...resumeData,
+            internships: resumeData.internships.map((intern, i) =>
+                i === index ? { ...intern, [name]: value } : intern
+            )
+        });
     };
 
     const removeInternship = (index) => {
@@ -87,9 +120,12 @@ const ResumeForm = () => {
 
     const handleLeadershipChange = (index, e) => {
         const { name, value } = e.target;
-        const updatedLead = [...resumeData.leadershipAchievements];
-        updatedLead[index][name] = value;
-        setResumeData({ ...resumeData, leadershipAchievements: updatedLead });
+        setResumeData({
+            ...resumeData,
+            leadershipAchievements: resumeData.leadershipAchievements.map((lead, i) =>
+                i === index ? { ...lead, [name]: value } : lead
+            )
+        });
     };
 
     const removeLeadership = (index) => {
@@ -109,9 +145,12 @@ const ResumeForm = () => {
 
     const handleCertificationChange = (index, e) => {
         const { name, value } = e.target;
-        const updatedCert = [...resumeData.certifications];
-        updatedCert[index][name] = value;
-        setResumeData({ ...resumeData, certifications: updatedCert });
+        setResumeData({
+            ...resumeData,
+            certifications: resumeData.certifications.map((cert, i) =>
+                i === index ? { ...cert, [name]: value } : cert
+            )
+        });
     };
 
     const removeCertification = (index) => {
@@ -128,12 +167,14 @@ const ResumeForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Submitting Resume Data:', resumeData);
         try {
-            await axios.post('http://localhost:5000/api/resumes', resumeData);
-            alert('Resume saved to database!');
+            const res = await axios.post('http://localhost:5000/api/resumes', resumeData);
+            console.log('Save Response:', res.data);
+            alert('Resume saved to database successfully!');
         } catch (err) {
-            console.error(err);
-            alert('Error saving resume');
+            console.error('Save Error:', err.response?.data || err.message);
+            alert(`Error saving resume: ${err.response?.data?.error || err.message}`);
         }
     };
 
@@ -166,27 +207,27 @@ const ResumeForm = () => {
                             <div className="row g-3">
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">Full Name</label>
-                                    <input type="text" name="fullName" placeholder="e.g., John Doe" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="text" name="fullName" placeholder="e.g., John Doe" className="form-control" value={resumeData.personalInfo.fullName} onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">Email Address</label>
-                                    <input type="email" name="email" placeholder="e.g., john@example.com" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="email" name="email" placeholder="e.g., john@example.com" className="form-control" value={resumeData.personalInfo.email} onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">Phone Number</label>
-                                    <input type="text" name="phone" placeholder="e.g., +91 98765 43210" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="text" name="phone" placeholder="e.g., +91 98765 43210" className="form-control" value={resumeData.personalInfo.phone} onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">Location (City, State)</label>
-                                    <input type="text" name="location" placeholder="e.g., Mumbai, Maharashtra" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="text" name="location" placeholder="e.g., Mumbai, Maharashtra" className="form-control" value={resumeData.personalInfo.location} onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">LinkedIn URL</label>
-                                    <input type="text" name="linkedIn" placeholder="https://linkedin.com/in/yourprofile" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="text" name="linkedIn" placeholder="https://linkedin.com/in/yourprofile" className="form-control" value={resumeData.personalInfo.linkedIn} onChange={handlePersonalInfoChange} />
                                 </div>
                                 <div className="col-md-6">
                                     <label className="form-label fw-bold text-info mb-1">GitHub URL</label>
-                                    <input type="text" name="github" placeholder="https://github.com/yourusername" className="form-control" onChange={handlePersonalInfoChange} />
+                                    <input type="text" name="github" placeholder="https://github.com/yourusername" className="form-control" value={resumeData.personalInfo.github} onChange={handlePersonalInfoChange} />
                                 </div>
                             </div>
                         </section>
@@ -196,7 +237,45 @@ const ResumeForm = () => {
                                 <span className="me-2">🎯</span> Career Objective
                             </h5>
                             <label className="form-label fw-bold text-info mb-1">Career Objective / Summary</label>
-                            <textarea className="form-control" rows="3" placeholder="Write 2–3 lines about your career goals..." value={resumeData.careerObjective} onChange={(e) => setResumeData({ ...resumeData, careerObjective: e.target.value })}></textarea>
+                            <textarea className="form-control" rows="3" placeholder="Write 2–3 lines about your career goals..." value={resumeData.careerObjective || ''} onChange={(e) => setResumeData({ ...resumeData, careerObjective: e.target.value })}></textarea>
+                        </section>
+
+                        <section className="mb-5">
+                            <h5 className="text-secondary fw-bold mb-3 d-flex justify-content-between align-items-center">
+                                <span>💼 Work Experience</span>
+                                <button type="button" className="btn btn-sm btn-outline-success rounded-pill px-3" onClick={addExperience}>+ Add Experience</button>
+                            </h5>
+                            {resumeData.experience.map((exp, index) => (
+                                <div key={index} className="glass-card mb-4 p-4 border-0" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                                    <button type="button" className="btn btn-sm btn-outline-danger float-end mb-2" onClick={() => removeExperience(index)}>✕</button>
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold text-info mb-1">Job Title</label>
+                                            <input type="text" name="jobTitle" placeholder="e.g., Software Engineer" className="form-control" value={exp.jobTitle} onChange={(e) => handleExperienceChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold text-info mb-1">Company Name</label>
+                                            <input type="text" name="company" placeholder="e.g., Google" className="form-control" value={exp.company} onChange={(e) => handleExperienceChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label className="form-label fw-bold text-info mb-1">Location</label>
+                                            <input type="text" name="location" placeholder="City, State / Remote" className="form-control" value={exp.location} onChange={(e) => handleExperienceChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold text-info mb-1">Start Date</label>
+                                            <input type="text" name="startDate" placeholder="Month, Year" className="form-control" value={exp.startDate} onChange={(e) => handleExperienceChange(index, e)} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold text-info mb-1">End Date</label>
+                                            <input type="text" name="endDate" placeholder="Month, Year / Present" className="form-control" value={exp.endDate} onChange={(e) => handleExperienceChange(index, e)} />
+                                        </div>
+                                        <div className="col-12">
+                                            <label className="form-label fw-bold text-info mb-1">Description</label>
+                                            <textarea name="description" placeholder="Describe your key responsibilities and achievements..." className="form-control" rows="3" value={exp.description} onChange={(e) => handleExperienceChange(index, e)}></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </section>
 
                         <section className="mb-5">
