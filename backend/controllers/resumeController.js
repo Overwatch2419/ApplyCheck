@@ -4,10 +4,14 @@ const Resume = require('../models/Resume');
 // @route POST /api/resumes
 exports.createResume = async (req, res) => {
     try {
+        console.log('--- POST /api/resumes ---');
+        console.log('Body:', req.body);
         const newResume = new Resume(req.body);
         const savedResume = await newResume.save();
+        console.log('Success: Resume saved with ID:', savedResume._id);
         res.status(201).json(savedResume);
     } catch (err) {
+        console.error('Error in createResume:', err);
         res.status(500).json({ error: err.message });
     }
 };
